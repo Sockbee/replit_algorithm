@@ -3,7 +3,7 @@
 #include <algorithm>
 using namespace std;
 
-int main()
+/*int main()
 {
   int N, M, K;
 
@@ -22,4 +22,4 @@ int main()
   ans += (arr[0] * K + arr[1]) * a + arr[0] * (M % (K + 1));
 
   printf("%d\n", ans);
-}
+}*/
