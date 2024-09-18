@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-/*int main()
+int exec()
 {
   int N, M;
   cin >> N >> M;
@@ -22,4 +22,4 @@ M; j++){ cin >> v[i][j];
     max = *max_element(min.begin(), min.end());
   }
   cout << max;
-}*/
+}
