@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-int exec()
+int exec3()
 {
   int N, M;
   cin >> N >> M;
@@ -23,4 +23,6 @@ int exec()
     max = *max_element(min.begin(), min.end());
   }
   cout << max;
+
+  return 0;
 }
