@@ -1,56 +1,39 @@
-#include <algorithm>
-#include <cmath> // abs 함수를 사용하기 위해 추가
-#include <iostream>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-  long N, target;
-  cin >> N >> target;
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-  vector<long> v(N);
-  for (long i = 0; i < N; i++) {
-    cin >> v[i];
-  }
-  sort(v.begin(), v.end());
+    long long n, m, max = 0;
+    int tree[1000001];
 
-  long left = 0; // 최소값을 0으로 초기화
-  long right = v[N - 1];
-  long closest = 0; // 처음에 closest를 0으로 초기화
-  long mid;
+    cin >> n >> m;
+    for(int i = 0; i < n; i++) cin >> tree[i];
 
-  // 이진 탐색 시작
-  while (left <= right) {
-    mid = left + (right - left) / 2; // 나무의 길이 평균값
-    long sum = 0;
+    sort(tree, tree + n);
 
-    // 나무의 길이 조정에 따른 총 합계 계산
-    for (long i = 0; i < N; i++) {
-      sum += max(v[i] - mid, 0L); // max의 두 번째 인수를 long으로 설정
+    long long low = 0;
+    long long high = tree[n - 1];
+
+    while(low <= high){ //cut 가능할 때 까지
+        long long sum = 0;
+        long long cut = (low + high) / 2;
+
+        for(int i = 0; i < n; i++) {
+            if(tree[i] - cut > 0) sum += tree[i] - cut; // cut 하고 남는 게 있다면 가져감
+        }
+
+        if(sum >= m){ // m미터보다 가져간 나무가 같거나 많으면
+            max = cut; // 현재 cut 지점을 최대 지점으로 저장
+            low = cut + 1; // cut 가능 구간을 더 올림
+        } else{
+            high = cut - 1; // m미터가 안 되면 cut 가능 구간을 내림
+        }
     }
 
-    // 목표값과의 차이 비교
-    if (abs(sum - target) < abs(closest - target)) {
-      closest = sum; // 가장 가까운 합계 업데이트
-    }
+    cout << max; // 최대 cut 지점 출력
 
-    // 목표값과 같은 경우
-    if (sum == target) {
-      break;
-    } else if (sum < target) {
-      right = mid - 1; // 더 높은 길이 탐색
-    } else {
-      left = mid + 1; // 더 낮은 길이 탐색
-    }
-  }
-
-  // 만약 closest가 target보다 작으면 mid를 조정
-  if (closest < target) {
-    mid -= 1;
-  }
-
-  cout << mid << endl; // 결과 출력
-
-  return 0;
+    return 0;
 }
