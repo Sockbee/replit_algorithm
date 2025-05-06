@@ -6,9 +6,9 @@ lines = []
 
 while True:
     line = input().rstrip()
-    lines.append(line)
     if line == ".":
         break
+    lines.append(line)
 
 left = ['(', '[']
 ans = []
@@ -32,10 +32,8 @@ for line in lines:
             else:
                 ans_temp = "no"
                 break
-    if (not stack):
-        ans_temp = "yes"
-    else:
-        ans_temp = "no"
+    if (ans_temp != "no"):
+        ans_temp = "yes" if not stack else "no"
     ans.append(ans_temp)
 
 for word in ans:
