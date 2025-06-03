@@ -2,34 +2,32 @@ import sys
 from collections import deque
 input = sys.stdin.readline
 
-T = int(input())
-
 def op_D(n):
-    n = int(n)
-    return str((2 * n) % 10000)
+    return (2 * n) % 10000
 
 def op_S(n):
-    n = int(n)
-    if n == 1:
-        return "9999"
-    else:
-        return str(n - 1)
+    return 9999 if n == 0 else n - 1
     
 def op_L(n):
-    rotated_L = n[3] + n[:3]
-    return rotated_L
+    n = str(n).zfill(4)
+    return int(n[1:] + n[0])
 
 def op_R(n):
-    rotated_R = n[1:4] + n[0]
-    return rotated_R
+    n = str(n).zfill(4)
+    return int(n[-1] + n[:-1])
+
+op = ['D', 'S', 'L', 'R']
+
+
+T = int(input())
 
 for _ in range(T):
-    a, b = input().rstrip().split()
-    a.zfill(4) # 0 채워서 4자리수로 만듦
-    b.zfill(4)
+    a, b = map(int, input().rstrip().split())
 
     q = deque()
     visited = [False] * 10000
+    prev = [(-1, '') for _ in range(10000)]
+
     visited[a] = True
     q.append(a)
 
@@ -37,9 +35,19 @@ for _ in range(T):
         x = q.popleft()
         if x == b:
             break
-        
-        for nx in [op_D(x), op_S(x), op_L(x), op_R(x)]:
-            if not visited[int(nx)]:
-                visited[int(nx)] = True
+
+        for i, func in enumerate([op_D, op_S, op_L, op_R]):
+            nx = func(x)
+            if not visited[nx]:
+                visited[nx] = True
+                prev[nx] = (x, op[i])
                 q.append(nx)
 
+    # 백트래킹
+    path = []
+    current = b
+    while current != a:
+        current, oper = prev[current]
+        path.append(oper)
+
+    print(''.join(reversed(path)))
