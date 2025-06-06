@@ -20,16 +20,16 @@ for i in range(N):
             ans[i][j] = max(ans[i][j], graph[i][j] + graph[i+1][j] + graph[i+2][j] + graph[i+3][j])
         #길쭉한 애 가로
         if j + 3 < M:
-            ans[i][j] = max(ans[i][j], graph[i][j + 1] + graph[i][j+1] + graph[i][j+2] + graph[i][j+3])
+            ans[i][j] = max(ans[i][j], graph[i][j] + graph[i][j+1] + graph[i][j+2] + graph[i][j+3])
         # 3 가로
         if 0 < j < M - 1:
             if 0 < i < N - 1:
                 ans[i][j] = max(ans[i][j], graph[i][j-1] + graph[i][j] + graph[i][j+1] 
                                 + max(graph[i-1][j-1], graph[i-1][j], graph[i-1][j+1],
-                                      graph[i+1][j-1], graph[i+1][j]), graph[i+1][j+1])
+                                      graph[i+1][j-1], graph[i+1][j], graph[i+1][j+1]))
             elif i == 0:
                 ans[i][j] = max(ans[i][j], graph[i][j-1] + graph[i][j] + graph[i][j+1] 
-                                + max(graph[i+1][j-1], graph[i+1][j]), graph[i+1][j+1])
+                                + max(graph[i+1][j-1], graph[i+1][j], graph[i+1][j+1]))
             elif i == N - 1:
                 ans[i][j] = max(ans[i][j], graph[i][j-1] + graph[i][j] + graph[i][j+1] 
                                 + max(graph[i-1][j-1], graph[i-1][j], graph[i-1][j+1]))
