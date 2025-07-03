@@ -4,47 +4,22 @@ from collections import deque
 
 N = int(input())
 
-graph = [list(map(int, input().split())) + [1] for _ in range(N)]
+graph = [list(map(int, input().split())) for _ in range(N)]
 
-graph.append([1] * (N + 1))
+d = [[[0]*3 for _ in range(N)] for _ in range(N)]
+d[0][1][0] = 1  # 초기 상태: (0,1) 위치에 가로 방향
 
-d = [[0] * (N + 1) for _ in range(N + 1)]
+for i in range(N):
+    for j in range(N):
+        if graph[i][j] == 1: continue
+        # 가로
+        if j >= 1 and graph[i][j-1] == 0:
+            d[i][j][0] += d[i][j-1][0] + d[i][j-1][2]
+        # 세로
+        if i >= 1 and graph[i-1][j] == 0:
+            d[i][j][1] += d[i-1][j][1] + d[i-1][j][2]
+        # 대각선
+        if i >= 1 and j >= 1 and graph[i-1][j] == 0 and graph[i][j-1] == 0 and graph[i-1][j-1] == 0:
+            d[i][j][2] += d[i-1][j-1][0] + d[i-1][j-1][1] + d[i-1][j-1][2]
 
-p = [(0, 1), (1, 0), (1, 1)] # 가로 세로 대각선 순
-
-q = deque([(0, 1, 0)])
-d[0][1] = 1
-
-while q:
-    x, y, dir = q.popleft()
-    if x == N - 1 and y == N - 1:
-        break
-
-    if dir == 0:
-        if not graph[x][y + 1]:
-            q.append((x, y + 1, 0))
-            d[x][y + 1] += d[x][y]
-            if not graph[x + 1][y] and not graph[x + 1][y + 1]:
-                q.append((x + 1, y + 1, 2))
-                d[x + 1][y + 1] += d[x][y]
-
-    elif dir == 1:
-        if not graph[x + 1][y]:
-            q.append((x + 1, y, 1))
-            d[x + 1][y] += d[x][y]
-            if not graph[x][y + 1] and not graph[x + 1][y + 1]:
-                q.append((x + 1, y + 1, 2))
-                d[x + 1][y + 1] += d[x][y]
-
-    elif dir == 2:
-        if not graph[x][y + 1]:
-            q.append((x, y + 1, 0))
-            d[x][y + 1] += d[x][y]
-        if not graph[x + 1][y]:
-            q.append((x + 1, y, 1))
-            d[x + 1][y] += d[x][y]
-        if not graph[x][y + 1] and not graph[x + 1][y] and not graph[x + 1][y + 1]:
-            q.append((x + 1, y + 1, 2))
-            d[x + 1][y + 1] += d[x][y]
-
-print(d)
+print(sum(d[N-1][N-1]))
