@@ -14,10 +14,18 @@ chick = []
 
 for i in range(N):
     for j in range(N):
-        if i == 1:
+        if graph[i][j] == 1:
             homes.append((i, j))
-        elif i == 2:
+        elif graph[i][j] == 2:
             chick.append((i, j))
 
-for combi in list(combinations(chick, M)):
+min_city_chicken_distance = float('inf')
+
+for combi in combinations(chick, M):
+    total_distance = 0
     for home in homes:
+        distance = min(abs(home[0] - i) + abs(home[1] - j) for i, j in combi)
+        total_distance += distance
+    min_city_chicken_distance = min(min_city_chicken_distance, total_distance)
+
+print(min_city_chicken_distance)
