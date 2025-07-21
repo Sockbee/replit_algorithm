@@ -21,27 +21,50 @@ def bfs(graph_copied):
             if 0 <= nx < N and 0 <= ny < M:
                 if graph_copied[nx][ny] == 0:
                     cnt += 1
-                    graph_copied[nx][ny] = 1
+                    graph_copied[nx][ny] = 2 #감염띠
                     q.append((nx, ny))
+
+    return NM - cnt - LEN_VIRUS - CNT_WALL
 
 
 N, M = map(int, input().split()) # N은 세로 , M은 가로
+NM = N * M
 
-graph = [[] for _ in range(N)]
-for i in range(M):
+original_graph = [[] for _ in range(N)]
+for i in range(N):
     lst = list(map(int, input().split()))
-    graph[i] = lst
+    original_graph[i] = lst
 
 #바이러스 주소들 저장
+#빈칸 주소들도 저장
+#벽 개수도 저장
 virus = []
+empty = []
+CNT_WALL = 0
 for i in range(N):
     for j in range(M):
-        if graph[i][j] == 2:
+        if original_graph[i][j] == 0:
+            empty.append((i, j))
+        elif original_graph[i][j] == 2:
             virus.append((i, j))
+        else:
+            CNT_WALL += 1
+CNT_WALL += 3 #벽 3개 골라서 추가할거니까
 
-for combi in combinations(N * M, 3):
+LEN_VIRUS = len(virus)
+
+result = -1
+
+for combi in combinations(empty, 3):
     a, b, c = combi
-    graph[a // M][a % M] = 1
-    graph[b // M][b % M] = 1
-    graph[c // M][c % M] = 1
-    bfs()
+    original_graph[a[0]][a[1]] = 1
+    original_graph[b[0]][b[1]] = 1
+    original_graph[c[0]][c[1]] = 1
+
+    result = max(result, bfs([row[:] for row in original_graph]))
+
+    original_graph[a[0]][a[1]] = 0
+    original_graph[b[0]][b[1]] = 0
+    original_graph[c[0]][c[1]] = 0
+
+print(result)
