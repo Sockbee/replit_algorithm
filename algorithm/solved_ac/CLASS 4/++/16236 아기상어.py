@@ -41,26 +41,36 @@ def bfs(start):
         if sum(fishes) == 0:  # 더이상 머글 수 있는 물고기가 없음
             break
         x, y, distance = q.popleft()  # 이전 위치부터 다음 먹방까지 이동거리
+        if distance == 0:
+            visited = [[False] * N for _ in range(N)]
+            print("visited 초기화")
+            visited[x][y] = True
+        print("x, y : ", x, y)
 
         for i in range(4):
             nx = x + dx[i]
             ny = y + dy[i]
             if nx < 0 or ny < 0 or nx >= N or ny >= N:
                 continue  # 범위 벗어나면 pass
-            if graph[nx][ny] != 0 and graph[nx][ny] < lv[0]:
+            if visited[nx][ny]:
+                continue #이미 방문 했으면 pass
+            if graph[nx][ny] != 0 and graph[nx][ny] < lv[0]: # 먹을 수 있는 물고기
                 lv[1] += graph[nx][ny]  # 경험치로 저장
                 fishes[graph[nx][ny]] -= 1  # 물고기 수 -1
-                graph[nx][ny] = 0  # 밥 먹음
-                if lv[1] >= lv[0]:
+                graph[nx][ny] = 0  # 밥 먹었으면 0으로
+                if lv[1] >= lv[0]: # 레벨업 경험치 다 채웠을 시
                     lv[1] -= lv[0]  # 경험치 차감
-                    lv[1] += 1  # 레벨업
+                    lv[0] += 1  # 레벨업
                 q.append((nx, ny, 0))  # 여기로 아기상어 이동
+                print("q.append", nx, ny, 0)
                 result += distance  # 이전먹방부터 이동거리 result에 더함
+                print("distance:", distance, "result:", result)
                 break  # for문 탈출
-            elif graph[nx][ny] > lv[0]:
+            elif graph[nx][ny] > lv[0]: #못지나가는 길
                 continue  # 다음 위치 탐색
             else:  # 크기가 같거나 0이어서 이동만 가능한경우
                 q.append((nx, ny, distance + 1))
+                visited[nx][ny] = True
     return result
 
 
